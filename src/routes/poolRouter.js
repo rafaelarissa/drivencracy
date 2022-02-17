@@ -1,7 +1,8 @@
 import express from 'express';
-import { getPool } from '../controllers/PoolController.js';
+import { setPool, getPool } from '../controllers/PoolController.js';
 
 const poolRouter = express.Router();
-poolRouter.post('/pool', getPool);
+poolRouter.post('/pool', setPool);
+poolRouter.get('/pool', getPool);
 
 export default poolRouter;

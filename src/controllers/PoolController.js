@@ -6,7 +6,7 @@ const poolSchema = Joi.object({
   expiredAt: Joi.string().required()
 })
 
-export async function getPool(req, res) {
+export async function setPool(req, res) {
    const validation = poolSchema.validate(req.body);
 
   if(validation.error) {
@@ -24,6 +24,17 @@ export async function getPool(req, res) {
 
     res.send(201);
   } catch(error) {
+    console.log(error);
+    res.sendStatus(500);
+  }
+}
+
+export async function getPool(req, res) {
+  try {
+    const pool = await db.collection('pool').find().toArray();
+
+    res.send(pool);
+  } catch (error) {
     console.log(error);
     res.sendStatus(500);
   }
