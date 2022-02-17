@@ -3,12 +3,11 @@ import Joi from "joi";
 
 const poolSchema = Joi.object({
   title: Joi.string().required().trim(),
+  expiredAt: Joi.string().required()
 })
 
 export async function getPool(req, res) {
-  console.log(req.body)
-
-  const validation = poolSchema.validate(req.body);
+   const validation = poolSchema.validate(req.body);
 
   if(validation.error) {
     res.status(422).send('Campo title não pode ser vazio');
