@@ -1,6 +1,7 @@
 import express from 'express';
+import { setChoice } from '../controllers/ChoiceController.js';
 
 const choiceRouter = express.Router();
-// choiceRouter.get();
+choiceRouter.post('/choice', setChoice);
 
 export default choiceRouter;
