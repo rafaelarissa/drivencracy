@@ -1,5 +1,6 @@
 import db from "../db.js";
 import Joi from "joi";
+import { ObjectId } from "bson";
 
 const poolSchema = Joi.object({
   title: Joi.string().required().trim(),
@@ -35,6 +36,23 @@ export async function getPool(req, res) {
 
     res.send(pool);
   } catch (error) {
+    console.log(error);
+    res.sendStatus(500);
+  }
+}
+
+export async function getChoiceOptions(req, res) {
+  const id = req.params.id;
+
+  try {
+    const listChoice = await db.collection('choice').find({ poolId: id }).toArray();
+
+    if(!listChoice) {
+      return res.status(404).send('Enquete não encontrada');
+    }
+
+    res.send(listChoice);
+  } catch(error) {
     console.log(error);
     res.sendStatus(500);
   }
