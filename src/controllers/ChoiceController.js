@@ -20,8 +20,6 @@ export async function setChoice(req, res) {
     poolId: req.body.poolId
   }
 
-  console.log(choice.poolId)
-  console.log(new ObjectId(choice.poolId))
   try {
     const searchPool = await db.collection('pool').findOne({ _id: new ObjectId(choice.poolId) });
 
@@ -29,10 +27,11 @@ export async function setChoice(req, res) {
       return res.status(404).send('Enquete não existente');
     }
 
-    // const searchChoice = await db.collection('choice').findOne({title: choice.title}).toArray();
-    // if(searchChoice) {
-    //   return res.status(409).send('Opção de voto já existente');
-    // }
+    const searchChoice = await db.collection('choice').findOne({ title: choice.title });
+
+    if(searchChoice) {
+      return res.status(409).send('Opção de voto já existente');
+    }
 
     await db.collection('choice').insertOne(choice);
 
