@@ -35,7 +35,7 @@ export async function setChoice(req, res) {
 
     await db.collection('choice').insertOne(choice);
 
-    res.sendStatus(201);
+    res.status(201).send(choice);
   } catch(error){
     res.status(500).send(error.message);
   }
