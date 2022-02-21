@@ -1,21 +1,9 @@
-import Joi from "joi";
 import db from "../db.js";
 import { ObjectId } from "mongodb";
 import dayjs from "dayjs";
 
-const choiceSchema = Joi.object({
-  title: Joi.string().required().trim(),
-  poolId: Joi.required()
-})
-
 export async function setChoice(req, res) {
-  const validation = choiceSchema.validate(req.body);
-
-  if(validation.error) {
-    res.sendStatus(422);
-    return
-  }
-
+  
   const choice = {
     title: req.body.title,
     poolId: req.body.poolId

@@ -1,20 +1,8 @@
 import db from "../db.js";
-import Joi from "joi";
 import { ObjectId } from "mongodb";
 import dayjs from "dayjs";
 
-const poolSchema = Joi.object({
-  title: Joi.string().required().trim(),
-  expiredAt: Joi.optional()
-})
-
 export async function setPool(req, res) {
-   const validation = poolSchema.validate(req.body);
-
-  if(validation.error) {
-    res.status(422).send('Campo title não pode ser vazio');
-    return
-  }
 
   const pool = {
     title: req.body.title,
@@ -85,7 +73,7 @@ export async function countVotes(req, res) {
       }
     }
 
-    const pool = await db.collection('pool').find({ _id: new ObjectId(id) }).toArray();
+    const pool = await db.collection('pool').findOne({ _id: new ObjectId(id) });
 
     res.send({
       ...pool,
