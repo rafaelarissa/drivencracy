@@ -1,10 +1,11 @@
 import db from "../db.js";
 import Joi from "joi";
-import { ObjectId } from "bson";
+import { ObjectId } from "mongodb";
+import dayjs from "dayjs";
 
 const poolSchema = Joi.object({
   title: Joi.string().required().trim(),
-  expiredAt: Joi.string().required()
+  expiredAt: Joi.optional()
 })
 
 export async function setPool(req, res) {
@@ -20,6 +21,10 @@ export async function setPool(req, res) {
     expiredAt: req.body.expiredAt
   }
 
+  if(pool.expiredAt === '') {
+    pool.expiredAt = dayjs().add(30, 'day').format('YYYY-MM-DD HH:mm')
+  }
+  
   try{
     await db.collection('pool').insertOne(pool);
 
