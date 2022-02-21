@@ -65,6 +65,6 @@ export async function setVote(req, res) {
     res.sendStatus(201);
   } catch(error) {
     console.log(error)
-    res.sendStatus(500);
+    res.status(500).send(error.message);
   }
 }

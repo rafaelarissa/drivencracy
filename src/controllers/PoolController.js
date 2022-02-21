@@ -47,7 +47,7 @@ export async function getChoiceOptions(req, res) {
     res.send(listChoice);
   } catch(error) {
     console.log(error);
-    res.sendStatus(500);
+    res.status(500).send(error.message);
   }
 }
 
@@ -58,7 +58,7 @@ export async function countVotes(req, res) {
     const choice = await db.collection('choice').find({ poolId: id }).toArray();
     const vote = await db.collection('vote').find({ }).toArray();
     const counter = [];
-    let position = 0;
+    let position;
     
     for(let i = 0; i < choice.length; i++){
       counter.push(0);
@@ -84,6 +84,6 @@ export async function countVotes(req, res) {
     })    
   } catch(error) {
     console.log(error);
-    res.sendStatus(500);
+    res.status(500).send(error.message);
     }
 }
