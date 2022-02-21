@@ -58,7 +58,8 @@ export async function countVotes(req, res) {
     const choice = await db.collection('choice').find({ poolId: id }).toArray();
     const vote = await db.collection('vote').find({ }).toArray();
     const counter = [];
-    let position;
+    let position = 0;
+    let maior = 0;
     
     for(let i = 0; i < choice.length; i++){
       counter.push(0);
@@ -68,11 +69,14 @@ export async function countVotes(req, res) {
       for(let j = 0; j < vote.length; j++) {
         if(choice[i]._id == (new ObjectId(vote[j].choiceId).toString())) {
           counter[i]++;  
-          position = i;
+          if(counter[i] > maior){
+            position = i;
+            maior = counter[i];
+          }
         }
       }
     }
-
+ 
     const pool = await db.collection('pool').findOne({ _id: new ObjectId(id) });
 
     res.send({
