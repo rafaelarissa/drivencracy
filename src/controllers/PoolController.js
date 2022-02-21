@@ -57,3 +57,40 @@ export async function getChoiceOptions(req, res) {
     res.sendStatus(500);
   }
 }
+
+export async function countVotes(req, res) {
+  const id = req.params.id;
+
+  try {
+    const choice = await db.collection('choice').find({ poolId: id }).toArray();
+    const vote = await db.collection('vote').find({ }).toArray();
+    const counter = [];
+    let position = 0;
+    
+    for(let i = 0; i < choice.length; i++){
+      counter.push(0);
+    }
+
+    for(let i = 0; i < choice.length; i++) {
+      for(let j = 0; j < vote.length; j++) {
+        if(choice[i]._id == (new ObjectId(vote[j].choiceId).toString())) {
+          counter[i]++;  
+          position = i;
+        }
+      }
+    }
+
+    const pool = await db.collection('pool').find({ _id: new ObjectId(id) }).toArray();
+
+    res.send({
+      ...pool,
+      result: {
+        title: choice[position].title,
+        votes: Math.max(...counter) 
+      }
+    })    
+  } catch(error) {
+    console.log(error);
+    res.sendStatus(500);
+    }
+}
