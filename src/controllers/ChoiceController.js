@@ -1,6 +1,7 @@
 import Joi from "joi";
 import db from "../db.js";
 import { ObjectId } from "mongodb";
+import dayjs from "dayjs";
 
 const choiceSchema = Joi.object({
   title: Joi.string().required().trim(),
@@ -38,5 +39,29 @@ export async function setChoice(req, res) {
     res.status(201).send(choice);
   } catch(error){
     res.status(500).send(error.message);
+  }
+}
+
+export async function setVote(req, res) {
+  const id = req.params.id;
+
+  const vote = {
+    createdAt: dayjs().format('YYYY-MM-DD HH-mm'), 
+	  choiceId: id
+  }
+
+  try {
+    const isChoice = await db.collection('choice').findOne({ _id: new ObjectId(id)} );
+
+    if(!isChoice) {
+      return res.status(404).send('Opção de voto não existente')
+    }
+
+    await db.collection('vote').insertOne(vote);
+
+    res.sendStatus(201);
+  } catch(error) {
+    console.log(error)
+    res.sendStatus(500);
   }
 }
